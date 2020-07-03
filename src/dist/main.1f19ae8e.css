@@ -1,9 +1,32 @@
+.email-date,
+.email-from,
+.email-subject,
+.email-body {
+  text-overflow: ellipsis;
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.email-date {
+  width: 10%;
+}
+.email-from {
+  width: 20%;
+}
+.email-subject {
+  width: 20%;
+}
+.email-body {
+  width: 50%;
+}
+
 body {
   background-color: blue;
 }
 
 #app-container {
-  width: 600px;
+  width: 900px;
   background-color: white;
   border: solid black 1px;
   margin: auto;
