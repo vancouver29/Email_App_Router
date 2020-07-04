@@ -32433,18 +32433,53 @@ var EmailRow = /*#__PURE__*/function (_Component) {
 
   var _super = _createSuper(EmailRow);
 
-  function EmailRow() {
+  function EmailRow(props) {
+    var _this;
+
     _classCallCheck(this, EmailRow);
 
-    return _super.apply(this, arguments);
+    _this = _super.call(this, props);
+    _this.toggleIsRead = _this.toggleIsRead.bind(_assertThisInitialized(_this));
+    return _this;
   }
 
   _createClass(EmailRow, [{
+    key: "getClassName",
+    value: function getClassName() {
+      var className = "email-row";
+      var emailId = this.props.email.id;
+
+      if (this.props.isRead[emailId]) {
+        className += " email-is-read";
+      }
+
+      return className;
+    }
+  }, {
+    key: "toggleIsRead",
+    value: function toggleIsRead() {
+      var emailId = this.props.email.id;
+
+      if (this.props.isRead[emailId]) {
+        this.props.markUnread(emailId);
+      } else {
+        this.props.markRead(emailId);
+      } // indicate that this function handled the click
+      // and the click should not propage to any other click function
+
+
+      return true;
+    }
+  }, {
     key: "render",
     value: function render() {
       return /*#__PURE__*/_react.default.createElement("div", {
-        id: "email-row"
+        className: this.getClassName()
       }, /*#__PURE__*/_react.default.createElement("div", {
+        className: "email-toggle-is-read"
+      }, /*#__PURE__*/_react.default.createElement("button", {
+        onClick: this.toggleIsRead
+      }, "is read?")), /*#__PURE__*/_react.default.createElement("div", {
         className: "email-date"
       }, this.props.email.date), /*#__PURE__*/_react.default.createElement("div", {
         className: "email-from"
@@ -32510,6 +32545,13 @@ var EmailRead = /*#__PURE__*/function (_Component) {
   }
 
   _createClass(EmailRead, [{
+    key: "componentWillUnmount",
+    // this component is about to disapear from the page
+    value: function componentWillUnmount() {
+      var emailId = this.props.match.params.id;
+      this.props.markRead(emailId);
+    }
+  }, {
     key: "render",
     value: function render() {
       var emailId = this.props.match.params.id;
@@ -32595,6 +32637,8 @@ var Inbox = /*#__PURE__*/function (_Component) {
   _createClass(Inbox, [{
     key: "render",
     value: function render() {
+      var _this = this;
+
       return /*#__PURE__*/_react.default.createElement("div", {
         id: "inbox"
       }, /*#__PURE__*/_react.default.createElement("h1", null, "Inbox"), /*#__PURE__*/_react.default.createElement("p", null, "You have ", this.props.emails.length, " Emails "), /*#__PURE__*/_react.default.createElement("div", {
@@ -32604,8 +32648,11 @@ var Inbox = /*#__PURE__*/function (_Component) {
           key: index,
           to: "/read/".concat(email.id)
         }, /*#__PURE__*/_react.default.createElement(_EmailRow.default, {
-          email: email
-        }), ";");
+          email: email,
+          isRead: _this.props.isRead,
+          markRead: _this.props.markRead,
+          markUnread: _this.props.markUnread
+        }));
       })));
     }
   }]);
@@ -33460,6 +33507,12 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -33492,12 +33545,37 @@ var App = /*#__PURE__*/function (_Component) {
 
     _this = _super.call(this, props);
     _this.state = {
-      emails: _MOCK_DATA.default
+      emails: _MOCK_DATA.default,
+      isRead: {
+        "4c29adf0-af6b-4e20-956c-105ba31b7152": true
+      }
     };
+    _this.markRead = _this.markRead.bind(_assertThisInitialized(_this));
+    _this.markUnRead = _this.markUnRead.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(App, [{
+    key: "markRead",
+    value: function markRead(emailId) {
+      var isRead = _objectSpread({}, this.state.isRead);
+
+      isRead[emailId] = true;
+      this.setState({
+        isRead: isRead
+      });
+    }
+  }, {
+    key: "markUnRead",
+    value: function markUnRead(emailId) {
+      var isRead = _objectSpread({}, this.state.isRead);
+
+      isRead[emailId] = false;
+      this.setState({
+        isRead: isRead
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
       var _this2 = this;
@@ -33509,7 +33587,10 @@ var App = /*#__PURE__*/function (_Component) {
         path: "/",
         component: function component() {
           return /*#__PURE__*/_react.default.createElement(_Inbox.default, {
-            emails: _this2.state.emails
+            emails: _this2.state.emails,
+            isRead: _this2.state.isRead,
+            markRead: _this2.markRead,
+            markURead: _this2.markUnRead
           });
         }
       }), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {
@@ -33517,7 +33598,8 @@ var App = /*#__PURE__*/function (_Component) {
         path: "/read/:id",
         component: function component() {
           return /*#__PURE__*/_react.default.createElement(_EmailRead.default, {
-            emails: _this2.state.emails
+            emails: _this2.state.emails,
+            markRead: _this2.markRead
           });
         }
       }))));

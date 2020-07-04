@@ -2,6 +2,12 @@ import React, { Component } from "react";
 import { withRouter, Link } from "react-router-dom";
 
 class EmailRead extends Component {
+  // this component is about to disapear from the page
+  componentWillUnmount() {
+    const emailId = this.props.match.params.id;
+    this.props.markRead(emailId);
+  }
+
   render() {
     const emailId = this.props.match.params.id;
     const email = this.props.emails.filter((email) => {

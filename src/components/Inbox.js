@@ -14,7 +14,12 @@ export default class Inbox extends Component {
           {this.props.emails.map((email, index) => {
             return (
               <Link key={index} to={`/read/${email.id}`}>
-                <EmailRow email={email} />;
+                <EmailRow
+                  email={email}
+                  isRead={this.props.isRead}
+                  markRead={this.props.markRead}
+                  markUnread={this.props.markUnread}
+                />
               </Link>
             );
           })}
