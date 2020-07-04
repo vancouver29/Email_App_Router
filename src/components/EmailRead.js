@@ -1,15 +1,36 @@
 import React, { Component } from "react";
+import { withRouter, Link } from "react-router-dom";
 
-export default class EmailRead extends Component {
+class EmailRead extends Component {
   render() {
+    const emailId = this.props.match.params.id;
+    const email = this.props.emails.filter((email) => {
+      return email.id === emailId;
+    })[0];
+
+    if (!email) {
+      return (
+        <div>
+          <h1>Error finding Email</h1>
+          <p>
+            Invalid Email ID.{"  "}
+            <Link to="/">Go back to Inbox.</Link>
+          </p>
+        </div>
+      );
+    }
     return (
       <div>
-        <h1>{this.props.email.subject}</h1>
+        <h1>{email.subject}</h1>
         <h3>
-          {this.props.email.date} {this.props.email.email}
+          {email.date} {email.email}
         </h3>
-        <p>{this.props.email.body}</p>
+        {email.body.split("\n\n").map((paragraphText, index) => {
+          return <p key={index}>{paragraphText}</p>;
+        })}
       </div>
     );
   }
 }
+
+export default withRouter(EmailRead);
