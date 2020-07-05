@@ -32440,9 +32440,9 @@ var EmailRow = /*#__PURE__*/function (_Component) {
 
     _classCallCheck(this, EmailRow);
 
-    _this = _super.call(this, props);
-    _this.toggleIsRead = _this.toggleIsRead.bind(_assertThisInitialized(_this));
-    _this.toggleIsSelected = _this.toggleIsSelected.bind(_assertThisInitialized(_this));
+    _this = _super.call(this, props); // this.toggleIsRead = this.toggleIsRead.bind(this);
+
+    _this.toggleisChecked = _this.toggleisChecked.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -32456,32 +32456,32 @@ var EmailRow = /*#__PURE__*/function (_Component) {
         className += " email-is-read";
       }
 
+      if (this.props.isSelected) {
+        className += " selected";
+      }
+
       return className;
-    }
+    } // toggleIsRead() {
+    //   let emailId = this.props.email.id;
+    //   if (this.props.isRead[emailId]) {
+    //     this.props.markUnRead(emailId);
+    //   } else {
+    //     this.props.markRead(emailId);
+    //   }
+    //   // indicate that this function handled the click
+    //   // and the click should not propage to any other click function
+    //   return true;
+    // }
+
   }, {
-    key: "toggleIsRead",
-    value: function toggleIsRead() {
+    key: "toggleisChecked",
+    value: function toggleisChecked() {
       var emailId = this.props.email.id;
 
-      if (this.props.isRead[emailId]) {
-        this.props.markUnRead(emailId);
+      if (!this.props.isChecked[emailId]) {
+        this.props.check(emailId);
       } else {
-        this.props.markRead(emailId);
-      } // indicate that this function handled the click
-      // and the click should not propage to any other click function
-
-
-      return true;
-    }
-  }, {
-    key: "toggleIsSelected",
-    value: function toggleIsSelected() {
-      var emailId = this.props.email.id;
-
-      if (!this.props.isSelected[emailId]) {
-        this.props.select(emailId);
-      } else {
-        this.props.deselect(emailId);
+        this.props.unCheck(emailId);
       }
     }
   }, {
@@ -32493,8 +32493,8 @@ var EmailRow = /*#__PURE__*/function (_Component) {
         className: "email-toggle-is-read"
       }, /*#__PURE__*/_react.default.createElement("input", {
         type: "checkbox",
-        onChange: this.toggleIsSelected,
-        checked: this.props.isSelected[this.props.email.id]
+        onChange: this.toggleisChecked,
+        checked: this.props.isChecked[this.props.email.id]
       })), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
         to: "/read/".concat(this.props.email.id)
       }, /*#__PURE__*/_react.default.createElement("div", {
@@ -32571,26 +32571,27 @@ var Inbox = /*#__PURE__*/function (_Component) {
 
       return /*#__PURE__*/_react.default.createElement("div", {
         id: "inbox"
-      }, /*#__PURE__*/_react.default.createElement("h1", null, "Inbox"), /*#__PURE__*/_react.default.createElement("p", null, "You have ", this.props.emails.length, " Emails "), /*#__PURE__*/_react.default.createElement("p", null, /*#__PURE__*/_react.default.createElement("button", {
-        onClick: this.props.markSelectedRead
+      }, /*#__PURE__*/_react.default.createElement("h1", null, "Inbox"), /*#__PURE__*/_react.default.createElement("p", null, "You have ", this.props.emails.length, " Emails "), /*#__PURE__*/_react.default.createElement("p", null, "***Click your left mouse wherever on the page to activate Keyboard Shortcuts ***"), /*#__PURE__*/_react.default.createElement("p", null, "j: to move down \u2193"), /*#__PURE__*/_react.default.createElement("p", null, "k: to move up \u2191"), /*#__PURE__*/_react.default.createElement("p", null, "x: to toggle Checkmark \u2714"), /*#__PURE__*/_react.default.createElement("p", null, /*#__PURE__*/_react.default.createElement("button", {
+        onClick: this.props.markCheckedRead
       }, "mark read"), /*#__PURE__*/_react.default.createElement("button", {
-        onClick: this.props.markSelectedUnRead
+        onClick: this.props.markCheckedUnRead
       }, "mark unread"), /*#__PURE__*/_react.default.createElement("button", {
-        onClick: this.props.selectAll
-      }, "select All"), /*#__PURE__*/_react.default.createElement("button", {
-        onClick: this.props.deSelectAll
-      }, "deselect All")), /*#__PURE__*/_react.default.createElement("div", {
+        onClick: this.props.checkAll
+      }, "check All"), /*#__PURE__*/_react.default.createElement("button", {
+        onClick: this.props.unCheckAll
+      }, "unCheck All")), /*#__PURE__*/_react.default.createElement("div", {
         id: "all-emails"
       }, this.props.emails.map(function (email, index) {
         return /*#__PURE__*/_react.default.createElement(_EmailRow.default, {
           key: index,
           email: email,
+          isSelected: _this.props.selectedIndex === index,
           isRead: _this.props.isRead,
-          isSelected: _this.props.isSelected,
+          isChecked: _this.props.isChecked,
           markRead: _this.props.markRead,
           markUnRead: _this.props.markUnRead,
-          select: _this.props.select,
-          deselect: _this.props.deselect
+          check: _this.props.check,
+          unCheck: _this.props.unCheck
         });
       })));
     }
@@ -33575,17 +33576,19 @@ var App = /*#__PURE__*/function (_Component) {
     _this = _super.call(this, props);
     _this.state = {
       emails: _MOCK_DATA.default,
+      selectedIndex: 0,
       isRead: {},
-      isSelected: {}
+      isChecked: {}
     };
     _this.markRead = _this.markRead.bind(_assertThisInitialized(_this));
     _this.markUnRead = _this.markUnRead.bind(_assertThisInitialized(_this));
-    _this.select = _this.select.bind(_assertThisInitialized(_this));
-    _this.deselect = _this.deselect.bind(_assertThisInitialized(_this));
-    _this.markSelectedRead = _this.markSelectedRead.bind(_assertThisInitialized(_this));
-    _this.markSelectedUnRead = _this.markSelectedUnRead.bind(_assertThisInitialized(_this));
-    _this.selectAll = _this.selectAll.bind(_assertThisInitialized(_this));
-    _this.deSelectAll = _this.deSelectAll.bind(_assertThisInitialized(_this));
+    _this.check = _this.check.bind(_assertThisInitialized(_this));
+    _this.unCheck = _this.unCheck.bind(_assertThisInitialized(_this));
+    _this.markCheckedRead = _this.markCheckedRead.bind(_assertThisInitialized(_this));
+    _this.markCheckedUnRead = _this.markCheckedUnRead.bind(_assertThisInitialized(_this));
+    _this.checkAll = _this.checkAll.bind(_assertThisInitialized(_this));
+    _this.unCheckAll = _this.unCheckAll.bind(_assertThisInitialized(_this));
+    _this.handleKey = _this.handleKey.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -33610,32 +33613,32 @@ var App = /*#__PURE__*/function (_Component) {
       });
     }
   }, {
-    key: "select",
-    value: function select(emailId) {
-      var isSelected = _objectSpread({}, this.state.isSelected);
+    key: "check",
+    value: function check(emailId) {
+      var isChecked = _objectSpread({}, this.state.isChecked);
 
-      isSelected[emailId] = true;
+      isChecked[emailId] = true;
       this.setState({
-        isSelected: isSelected
+        isChecked: isChecked
       });
     }
   }, {
-    key: "deselect",
-    value: function deselect(emailId) {
-      var isSelected = _objectSpread({}, this.state.isSelected);
+    key: "unCheck",
+    value: function unCheck(emailId) {
+      var isChecked = _objectSpread({}, this.state.isChecked);
 
-      isSelected[emailId] = false;
+      isChecked[emailId] = false;
       this.setState({
-        isSelected: isSelected
+        isChecked: isChecked
       });
     }
   }, {
-    key: "markSelectedRead",
-    value: function markSelectedRead() {
+    key: "markCheckedRead",
+    value: function markCheckedRead() {
       var isRead = _objectSpread({}, this.state.isRead);
 
-      for (var key in this.state.isSelected) {
-        if (this.state.isSelected[key]) {
+      for (var key in this.state.isChecked) {
+        if (this.state.isChecked[key]) {
           isRead[key] = true;
         }
       }
@@ -33645,12 +33648,12 @@ var App = /*#__PURE__*/function (_Component) {
       });
     }
   }, {
-    key: "markSelectedUnRead",
-    value: function markSelectedUnRead() {
+    key: "markCheckedUnRead",
+    value: function markCheckedUnRead() {
       var isRead = _objectSpread({}, this.state.isRead);
 
-      for (var key in this.state.isSelected) {
-        if (this.state.isSelected[key]) {
+      for (var key in this.state.isChecked) {
+        if (this.state.isChecked[key]) {
           isRead[key] = false;
         }
       }
@@ -33660,9 +33663,9 @@ var App = /*#__PURE__*/function (_Component) {
       });
     }
   }, {
-    key: "selectAll",
-    value: function selectAll() {
-      var isSelected = {};
+    key: "checkAll",
+    value: function checkAll() {
+      var isChecked = {};
 
       var _iterator = _createForOfIteratorHelper(this.state.emails),
           _step;
@@ -33670,7 +33673,7 @@ var App = /*#__PURE__*/function (_Component) {
       try {
         for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var email = _step.value;
-          isSelected[email.id] = true;
+          isChecked[email.id] = true;
         }
       } catch (err) {
         _iterator.e(err);
@@ -33679,15 +33682,44 @@ var App = /*#__PURE__*/function (_Component) {
       }
 
       this.setState({
-        isSelected: isSelected
+        isChecked: isChecked
       });
     }
   }, {
-    key: "deSelectAll",
-    value: function deSelectAll() {
+    key: "unCheckAll",
+    value: function unCheckAll() {
       this.setState({
-        isSelected: {}
+        isChecked: {}
       });
+    }
+  }, {
+    key: "handleKey",
+    value: function handleKey(ev) {
+      console.log("key: ", ev);
+
+      if (ev.key === "j") {
+        var index = this.state.selectedIndex + 1;
+        index = Math.min(index, this.state.emails.length - 1);
+        this.setState({
+          selectedIndex: index
+        });
+      } else if (ev.key === "k") {
+        var _index = this.state.selectedIndex - 1;
+
+        _index = Math.max(_index, 0);
+        this.setState({
+          selectedIndex: _index
+        });
+      } else if (ev.key === "x") {
+        var emailId = this.state.emails[this.state.selectedIndex].id;
+        var isChecked = this.state.isChecked[emailId];
+
+        if (isChecked) {
+          this.unCheck(emailId);
+        } else {
+          this.check(emailId);
+        }
+      }
     }
   }, {
     key: "render",
@@ -33695,23 +33727,26 @@ var App = /*#__PURE__*/function (_Component) {
       var _this2 = this;
 
       return /*#__PURE__*/_react.default.createElement("div", {
-        id: "app-container"
+        id: "app-container",
+        onKeyPress: this.handleKey,
+        tabIndex: "0"
       }, /*#__PURE__*/_react.default.createElement(_reactRouterDom.BrowserRouter, null, /*#__PURE__*/_react.default.createElement(_react.Fragment, null, /*#__PURE__*/_react.default.createElement(_Nav.default, null), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {
         exact: true,
         path: "/",
         component: function component() {
           return /*#__PURE__*/_react.default.createElement(_Inbox.default, {
             emails: _this2.state.emails,
+            selectedIndex: _this2.state.selectedIndex,
             isRead: _this2.state.isRead,
-            isSelected: _this2.state.isSelected,
+            isChecked: _this2.state.isChecked,
             markRead: _this2.markRead,
             markUnRead: _this2.markUnRead,
-            select: _this2.select,
-            deselect: _this2.deselect,
-            markSelectedRead: _this2.markSelectedRead,
-            markSelectedUnRead: _this2.markSelectedUnRead,
-            selectAll: _this2.selectAll,
-            deSelectAll: _this2.deSelectAll
+            check: _this2.check,
+            unCheck: _this2.unCheck,
+            markCheckedRead: _this2.markCheckedRead,
+            markCheckedUnRead: _this2.markCheckedUnRead,
+            checkAll: _this2.checkAll,
+            unCheckAll: _this2.unCheckAll
           });
         }
       }), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {
@@ -33782,7 +33817,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53048" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55317" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

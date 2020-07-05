@@ -12,18 +12,20 @@ export default class App extends Component {
     super(props);
     this.state = {
       emails: EMAILS,
+      selectedIndex: 0,
       isRead: {},
-      isSelected: {},
+      isChecked: {},
     };
 
     this.markRead = this.markRead.bind(this);
     this.markUnRead = this.markUnRead.bind(this);
-    this.select = this.select.bind(this);
-    this.deselect = this.deselect.bind(this);
-    this.markSelectedRead = this.markSelectedRead.bind(this);
-    this.markSelectedUnRead = this.markSelectedUnRead.bind(this);
-    this.selectAll = this.selectAll.bind(this);
-    this.deSelectAll = this.deSelectAll.bind(this);
+    this.check = this.check.bind(this);
+    this.unCheck = this.unCheck.bind(this);
+    this.markCheckedRead = this.markCheckedRead.bind(this);
+    this.markCheckedUnRead = this.markCheckedUnRead.bind(this);
+    this.checkAll = this.checkAll.bind(this);
+    this.unCheckAll = this.unCheckAll.bind(this);
+    this.handleKey = this.handleKey.bind(this);
   }
 
   markRead(emailId) {
@@ -38,22 +40,22 @@ export default class App extends Component {
     this.setState({ isRead });
   }
 
-  select(emailId) {
-    let isSelected = { ...this.state.isSelected };
-    isSelected[emailId] = true;
-    this.setState({ isSelected });
+  check(emailId) {
+    let isChecked = { ...this.state.isChecked };
+    isChecked[emailId] = true;
+    this.setState({ isChecked });
   }
 
-  deselect(emailId) {
-    let isSelected = { ...this.state.isSelected };
-    isSelected[emailId] = false;
-    this.setState({ isSelected });
+  unCheck(emailId) {
+    let isChecked = { ...this.state.isChecked };
+    isChecked[emailId] = false;
+    this.setState({ isChecked });
   }
 
-  markSelectedRead() {
+  markCheckedRead() {
     let isRead = { ...this.state.isRead };
-    for (let key in this.state.isSelected) {
-      if (this.state.isSelected[key]) {
+    for (let key in this.state.isChecked) {
+      if (this.state.isChecked[key]) {
         isRead[key] = true;
       }
     }
@@ -61,10 +63,10 @@ export default class App extends Component {
     this.setState({ isRead });
   }
 
-  markSelectedUnRead() {
+  markCheckedUnRead() {
     let isRead = { ...this.state.isRead };
-    for (let key in this.state.isSelected) {
-      if (this.state.isSelected[key]) {
+    for (let key in this.state.isChecked) {
+      if (this.state.isChecked[key]) {
         isRead[key] = false;
       }
     }
@@ -72,22 +74,43 @@ export default class App extends Component {
     this.setState({ isRead });
   }
 
-  selectAll() {
-    let isSelected = {};
+  checkAll() {
+    let isChecked = {};
     for (let email of this.state.emails) {
-      isSelected[email.id] = true;
+      isChecked[email.id] = true;
     }
 
-    this.setState({ isSelected });
+    this.setState({ isChecked });
   }
 
-  deSelectAll() {
-    this.setState({ isSelected: {} });
+  unCheckAll() {
+    this.setState({ isChecked: {} });
+  }
+
+  handleKey(ev) {
+    console.log("key: ", ev);
+    if (ev.key === "j") {
+      let index = this.state.selectedIndex + 1;
+      index = Math.min(index, this.state.emails.length - 1);
+      this.setState({ selectedIndex: index });
+    } else if (ev.key === "k") {
+      let index = this.state.selectedIndex - 1;
+      index = Math.max(index, 0);
+      this.setState({ selectedIndex: index });
+    } else if (ev.key === "x") {
+      let emailId = this.state.emails[this.state.selectedIndex].id;
+      let isChecked = this.state.isChecked[emailId];
+      if (isChecked) {
+        this.unCheck(emailId);
+      } else {
+        this.check(emailId);
+      }
+    }
   }
 
   render() {
     return (
-      <div id="app-container">
+      <div id="app-container" onKeyPress={this.handleKey} tabIndex="0">
         <Router>
           <Fragment>
             <Nav />
@@ -97,16 +120,17 @@ export default class App extends Component {
               component={() => (
                 <Inbox
                   emails={this.state.emails}
+                  selectedIndex={this.state.selectedIndex}
                   isRead={this.state.isRead}
-                  isSelected={this.state.isSelected}
+                  isChecked={this.state.isChecked}
                   markRead={this.markRead}
                   markUnRead={this.markUnRead}
-                  select={this.select}
-                  deselect={this.deselect}
-                  markSelectedRead={this.markSelectedRead}
-                  markSelectedUnRead={this.markSelectedUnRead}
-                  selectAll={this.selectAll}
-                  deSelectAll={this.deSelectAll}
+                  check={this.check}
+                  unCheck={this.unCheck}
+                  markCheckedRead={this.markCheckedRead}
+                  markCheckedUnRead={this.markCheckedUnRead}
+                  checkAll={this.checkAll}
+                  unCheckAll={this.unCheckAll}
                 />
               )}
             />

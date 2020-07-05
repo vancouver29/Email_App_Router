@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 export default class EmailRow extends Component {
   constructor(props) {
     super(props);
-    this.toggleIsRead = this.toggleIsRead.bind(this);
-    this.toggleIsSelected = this.toggleIsSelected.bind(this);
+    // this.toggleIsRead = this.toggleIsRead.bind(this);
+    this.toggleisChecked = this.toggleisChecked.bind(this);
   }
 
   getClassName() {
@@ -16,28 +16,31 @@ export default class EmailRow extends Component {
     if (this.props.isRead[emailId]) {
       className += " email-is-read";
     }
+    if (this.props.isSelected) {
+      className += " selected";
+    }
     return className;
   }
 
-  toggleIsRead() {
-    let emailId = this.props.email.id;
-    if (this.props.isRead[emailId]) {
-      this.props.markUnRead(emailId);
-    } else {
-      this.props.markRead(emailId);
-    }
+  // toggleIsRead() {
+  //   let emailId = this.props.email.id;
+  //   if (this.props.isRead[emailId]) {
+  //     this.props.markUnRead(emailId);
+  //   } else {
+  //     this.props.markRead(emailId);
+  //   }
 
-    // indicate that this function handled the click
-    // and the click should not propage to any other click function
-    return true;
-  }
+  //   // indicate that this function handled the click
+  //   // and the click should not propage to any other click function
+  //   return true;
+  // }
 
-  toggleIsSelected() {
+  toggleisChecked() {
     let emailId = this.props.email.id;
-    if (!this.props.isSelected[emailId]) {
-      this.props.select(emailId);
+    if (!this.props.isChecked[emailId]) {
+      this.props.check(emailId);
     } else {
-      this.props.deselect(emailId);
+      this.props.unCheck(emailId);
     }
   }
 
@@ -47,8 +50,8 @@ export default class EmailRow extends Component {
         <div className="email-toggle-is-read">
           <input
             type="checkbox"
-            onChange={this.toggleIsSelected}
-            checked={this.props.isSelected[this.props.email.id]}
+            onChange={this.toggleisChecked}
+            checked={this.props.isChecked[this.props.email.id]}
           />
         </div>
         <Link to={`/read/${this.props.email.id}`}>
