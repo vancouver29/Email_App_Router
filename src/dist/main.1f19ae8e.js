@@ -32402,6 +32402,8 @@ var _react = _interopRequireWildcard(require("react"));
 
 require("./EmailRow.css");
 
+var _reactRouterDom = require("react-router-dom");
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -32461,7 +32463,7 @@ var EmailRow = /*#__PURE__*/function (_Component) {
       var emailId = this.props.email.id;
 
       if (this.props.isRead[emailId]) {
-        this.props.markUnread(emailId);
+        this.props.markUnRead(emailId);
       } else {
         this.props.markRead(emailId);
       } // indicate that this function handled the click
@@ -32479,7 +32481,9 @@ var EmailRow = /*#__PURE__*/function (_Component) {
         className: "email-toggle-is-read"
       }, /*#__PURE__*/_react.default.createElement("button", {
         onClick: this.toggleIsRead
-      }, "is read?")), /*#__PURE__*/_react.default.createElement("div", {
+      }, "is read?")), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
+        to: "/read/".concat(this.props.email.id)
+      }, /*#__PURE__*/_react.default.createElement("div", {
         className: "email-date"
       }, this.props.email.date), /*#__PURE__*/_react.default.createElement("div", {
         className: "email-from"
@@ -32487,7 +32491,7 @@ var EmailRow = /*#__PURE__*/function (_Component) {
         className: "email-subject"
       }, this.props.email.subject), /*#__PURE__*/_react.default.createElement("div", {
         className: "email-body"
-      }, this.props.email.body));
+      }, this.props.email.body)));
     }
   }]);
 
@@ -32495,7 +32499,83 @@ var EmailRow = /*#__PURE__*/function (_Component) {
 }(_react.Component);
 
 exports.default = EmailRow;
-},{"react":"node_modules/react/index.js","./EmailRow.css":"components/EmailRow.css"}],"components/EmailRead.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","./EmailRow.css":"components/EmailRow.css","react-router-dom":"node_modules/react-router-dom/esm/react-router-dom.js"}],"components/Inbox.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _EmailRow = _interopRequireDefault(require("./EmailRow"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var Inbox = /*#__PURE__*/function (_Component) {
+  _inherits(Inbox, _Component);
+
+  var _super = _createSuper(Inbox);
+
+  function Inbox() {
+    _classCallCheck(this, Inbox);
+
+    return _super.apply(this, arguments);
+  }
+
+  _createClass(Inbox, [{
+    key: "render",
+    value: function render() {
+      var _this = this;
+
+      return /*#__PURE__*/_react.default.createElement("div", {
+        id: "inbox"
+      }, /*#__PURE__*/_react.default.createElement("h1", null, "Inbox"), /*#__PURE__*/_react.default.createElement("p", null, "You have ", this.props.emails.length, " Emails "), /*#__PURE__*/_react.default.createElement("div", {
+        id: "all-emails"
+      }, this.props.emails.map(function (email, index) {
+        return /*#__PURE__*/_react.default.createElement(_EmailRow.default, {
+          key: index,
+          email: email,
+          isRead: _this.props.isRead,
+          markRead: _this.props.markRead,
+          markUnRead: _this.props.markUnRead
+        });
+      })));
+    }
+  }]);
+
+  return Inbox;
+}(_react.Component);
+
+exports.default = Inbox;
+},{"react":"node_modules/react/index.js","./EmailRow":"components/EmailRow.js"}],"components/EmailRead.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -32579,89 +32659,7 @@ var EmailRead = /*#__PURE__*/function (_Component) {
 var _default = (0, _reactRouterDom.withRouter)(EmailRead);
 
 exports.default = _default;
-},{"react":"node_modules/react/index.js","react-router-dom":"node_modules/react-router-dom/esm/react-router-dom.js"}],"components/Inbox.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _react = _interopRequireWildcard(require("react"));
-
-var _reactRouterDom = require("react-router-dom");
-
-var _EmailRow = _interopRequireDefault(require("./EmailRow"));
-
-var _EmailRead = _interopRequireDefault(require("./EmailRead"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-var Inbox = /*#__PURE__*/function (_Component) {
-  _inherits(Inbox, _Component);
-
-  var _super = _createSuper(Inbox);
-
-  function Inbox() {
-    _classCallCheck(this, Inbox);
-
-    return _super.apply(this, arguments);
-  }
-
-  _createClass(Inbox, [{
-    key: "render",
-    value: function render() {
-      var _this = this;
-
-      return /*#__PURE__*/_react.default.createElement("div", {
-        id: "inbox"
-      }, /*#__PURE__*/_react.default.createElement("h1", null, "Inbox"), /*#__PURE__*/_react.default.createElement("p", null, "You have ", this.props.emails.length, " Emails "), /*#__PURE__*/_react.default.createElement("div", {
-        id: "all-emails"
-      }, this.props.emails.map(function (email, index) {
-        return /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
-          key: index,
-          to: "/read/".concat(email.id)
-        }, /*#__PURE__*/_react.default.createElement(_EmailRow.default, {
-          email: email,
-          isRead: _this.props.isRead,
-          markRead: _this.props.markRead,
-          markUnread: _this.props.markUnread
-        }));
-      })));
-    }
-  }]);
-
-  return Inbox;
-}(_react.Component);
-
-exports.default = Inbox;
-},{"react":"node_modules/react/index.js","react-router-dom":"node_modules/react-router-dom/esm/react-router-dom.js","./EmailRow":"components/EmailRow.js","./EmailRead":"components/EmailRead.js"}],"MOCK_DATA.json":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","react-router-dom":"node_modules/react-router-dom/esm/react-router-dom.js"}],"MOCK_DATA.json":[function(require,module,exports) {
 module.exports = [{
   "id": "4c29adf0-af6b-4e20-956c-105ba31b7152",
   "email": "kbariball0@fema.gov",
@@ -33590,7 +33588,7 @@ var App = /*#__PURE__*/function (_Component) {
             emails: _this2.state.emails,
             isRead: _this2.state.isRead,
             markRead: _this2.markRead,
-            markURead: _this2.markUnRead
+            markUnRead: _this2.markUnRead
           });
         }
       }), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {
@@ -33661,7 +33659,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63857" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53048" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

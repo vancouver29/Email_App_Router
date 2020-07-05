@@ -47,7 +47,7 @@ export default class App extends Component {
                   emails={this.state.emails}
                   isRead={this.state.isRead}
                   markRead={this.markRead}
-                  markURead={this.markUnRead}
+                  markUnRead={this.markUnRead}
                 />
               )}
             />
