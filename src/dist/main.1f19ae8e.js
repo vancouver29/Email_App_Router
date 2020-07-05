@@ -32442,6 +32442,7 @@ var EmailRow = /*#__PURE__*/function (_Component) {
 
     _this = _super.call(this, props);
     _this.toggleIsRead = _this.toggleIsRead.bind(_assertThisInitialized(_this));
+    _this.toggleIsSelected = _this.toggleIsSelected.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -32473,15 +32474,28 @@ var EmailRow = /*#__PURE__*/function (_Component) {
       return true;
     }
   }, {
+    key: "toggleIsSelected",
+    value: function toggleIsSelected() {
+      var emailId = this.props.email.id;
+
+      if (!this.props.isSelected[emailId]) {
+        this.props.select(emailId);
+      } else {
+        this.props.deselect(emailId);
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
       return /*#__PURE__*/_react.default.createElement("div", {
         className: this.getClassName()
       }, /*#__PURE__*/_react.default.createElement("div", {
         className: "email-toggle-is-read"
-      }, /*#__PURE__*/_react.default.createElement("button", {
-        onClick: this.toggleIsRead
-      }, "is read?")), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
+      }, /*#__PURE__*/_react.default.createElement("input", {
+        type: "checkbox",
+        onChange: this.toggleIsSelected,
+        checked: this.props.isSelected[this.props.email.id]
+      })), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
         to: "/read/".concat(this.props.email.id)
       }, /*#__PURE__*/_react.default.createElement("div", {
         className: "email-date"
@@ -32557,15 +32571,26 @@ var Inbox = /*#__PURE__*/function (_Component) {
 
       return /*#__PURE__*/_react.default.createElement("div", {
         id: "inbox"
-      }, /*#__PURE__*/_react.default.createElement("h1", null, "Inbox"), /*#__PURE__*/_react.default.createElement("p", null, "You have ", this.props.emails.length, " Emails "), /*#__PURE__*/_react.default.createElement("div", {
+      }, /*#__PURE__*/_react.default.createElement("h1", null, "Inbox"), /*#__PURE__*/_react.default.createElement("p", null, "You have ", this.props.emails.length, " Emails "), /*#__PURE__*/_react.default.createElement("p", null, /*#__PURE__*/_react.default.createElement("button", {
+        onClick: this.props.markSelectedRead
+      }, "mark read"), /*#__PURE__*/_react.default.createElement("button", {
+        onClick: this.props.markSelectedUnRead
+      }, "mark unread"), /*#__PURE__*/_react.default.createElement("button", {
+        onClick: this.props.selectAll
+      }, "select All"), /*#__PURE__*/_react.default.createElement("button", {
+        onClick: this.props.deSelectAll
+      }, "deselect All")), /*#__PURE__*/_react.default.createElement("div", {
         id: "all-emails"
       }, this.props.emails.map(function (email, index) {
         return /*#__PURE__*/_react.default.createElement(_EmailRow.default, {
           key: index,
           email: email,
           isRead: _this.props.isRead,
+          isSelected: _this.props.isSelected,
           markRead: _this.props.markRead,
-          markUnRead: _this.props.markUnRead
+          markUnRead: _this.props.markUnRead,
+          select: _this.props.select,
+          deselect: _this.props.deselect
         });
       })));
     }
@@ -33505,6 +33530,12 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -33544,12 +33575,17 @@ var App = /*#__PURE__*/function (_Component) {
     _this = _super.call(this, props);
     _this.state = {
       emails: _MOCK_DATA.default,
-      isRead: {
-        "4c29adf0-af6b-4e20-956c-105ba31b7152": true
-      }
+      isRead: {},
+      isSelected: {}
     };
     _this.markRead = _this.markRead.bind(_assertThisInitialized(_this));
     _this.markUnRead = _this.markUnRead.bind(_assertThisInitialized(_this));
+    _this.select = _this.select.bind(_assertThisInitialized(_this));
+    _this.deselect = _this.deselect.bind(_assertThisInitialized(_this));
+    _this.markSelectedRead = _this.markSelectedRead.bind(_assertThisInitialized(_this));
+    _this.markSelectedUnRead = _this.markSelectedUnRead.bind(_assertThisInitialized(_this));
+    _this.selectAll = _this.selectAll.bind(_assertThisInitialized(_this));
+    _this.deSelectAll = _this.deSelectAll.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -33574,6 +33610,86 @@ var App = /*#__PURE__*/function (_Component) {
       });
     }
   }, {
+    key: "select",
+    value: function select(emailId) {
+      var isSelected = _objectSpread({}, this.state.isSelected);
+
+      isSelected[emailId] = true;
+      this.setState({
+        isSelected: isSelected
+      });
+    }
+  }, {
+    key: "deselect",
+    value: function deselect(emailId) {
+      var isSelected = _objectSpread({}, this.state.isSelected);
+
+      isSelected[emailId] = false;
+      this.setState({
+        isSelected: isSelected
+      });
+    }
+  }, {
+    key: "markSelectedRead",
+    value: function markSelectedRead() {
+      var isRead = _objectSpread({}, this.state.isRead);
+
+      for (var key in this.state.isSelected) {
+        if (this.state.isSelected[key]) {
+          isRead[key] = true;
+        }
+      }
+
+      this.setState({
+        isRead: isRead
+      });
+    }
+  }, {
+    key: "markSelectedUnRead",
+    value: function markSelectedUnRead() {
+      var isRead = _objectSpread({}, this.state.isRead);
+
+      for (var key in this.state.isSelected) {
+        if (this.state.isSelected[key]) {
+          isRead[key] = false;
+        }
+      }
+
+      this.setState({
+        isRead: isRead
+      });
+    }
+  }, {
+    key: "selectAll",
+    value: function selectAll() {
+      var isSelected = {};
+
+      var _iterator = _createForOfIteratorHelper(this.state.emails),
+          _step;
+
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var email = _step.value;
+          isSelected[email.id] = true;
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+
+      this.setState({
+        isSelected: isSelected
+      });
+    }
+  }, {
+    key: "deSelectAll",
+    value: function deSelectAll() {
+      this.setState({
+        isSelected: {}
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
       var _this2 = this;
@@ -33587,8 +33703,15 @@ var App = /*#__PURE__*/function (_Component) {
           return /*#__PURE__*/_react.default.createElement(_Inbox.default, {
             emails: _this2.state.emails,
             isRead: _this2.state.isRead,
+            isSelected: _this2.state.isSelected,
             markRead: _this2.markRead,
-            markUnRead: _this2.markUnRead
+            markUnRead: _this2.markUnRead,
+            select: _this2.select,
+            deselect: _this2.deselect,
+            markSelectedRead: _this2.markSelectedRead,
+            markSelectedUnRead: _this2.markSelectedUnRead,
+            selectAll: _this2.selectAll,
+            deSelectAll: _this2.deSelectAll
           });
         }
       }), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {

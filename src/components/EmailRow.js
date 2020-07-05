@@ -6,6 +6,7 @@ export default class EmailRow extends Component {
   constructor(props) {
     super(props);
     this.toggleIsRead = this.toggleIsRead.bind(this);
+    this.toggleIsSelected = this.toggleIsSelected.bind(this);
   }
 
   getClassName() {
@@ -31,11 +32,24 @@ export default class EmailRow extends Component {
     return true;
   }
 
+  toggleIsSelected() {
+    let emailId = this.props.email.id;
+    if (!this.props.isSelected[emailId]) {
+      this.props.select(emailId);
+    } else {
+      this.props.deselect(emailId);
+    }
+  }
+
   render() {
     return (
       <div className={this.getClassName()}>
         <div className="email-toggle-is-read">
-          <button onClick={this.toggleIsRead}>is read?</button>
+          <input
+            type="checkbox"
+            onChange={this.toggleIsSelected}
+            checked={this.props.isSelected[this.props.email.id]}
+          />
         </div>
         <Link to={`/read/${this.props.email.id}`}>
           <div className="email-date">{this.props.email.date}</div>
